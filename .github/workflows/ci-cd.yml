@@ -1,34 +1,4 @@
-# # 
-
-# name: Docker
-
-# on:
-#   push:
-#     branches: [ "main" ]
-#   pull_request:
-#     branches: [ "main" ]
-
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
-
-#     steps:
-#     - name: Checkout our repository
-#       uses: actions/checkout@v4
-
-#     - name: Deploy
-#       uses: appleboy/ssh-action@master
-#       with:
-#         host: ${{ secrets.SSH_HOST }}
-#         username: ${{ secrets.SSH_USER }}
-#         key: ${{ secrets.SSH_PASSWORD }}
-#         port: ${{ secrets.SSH_PORT }}
-#         script: |
-#           pwd
-#           ls
-#           cd cd-cd
-#           sudo docker compose -f docker-compose.yml down --rmi all
-#           sudo docker compose -f docker-compose.yml up -d
+# 
 
 name: Docker
 
@@ -54,18 +24,9 @@ jobs:
         key: ${{ secrets.SSH_PASSWORD }}
         port: ${{ secrets.SSH_PORT }}
         script: |
-          # Print the current directory and list files for debugging
           pwd
-          ls -la
-          
-          # Navigate to the directory containing docker-compose.yml
+          ls
           cd cd-cd
-          
-          # List files in the directory to ensure docker-compose.yml exists
-          ls -la
-          
-          # Use Docker Compose to stop and remove containers, networks, images
-          sudo docker compose -f docker-compose.yml down --rmi all || true
-          
-          # Use Docker Compose to start up containers in detached mode
-          sudo docker compose -f docker-compose.yml up -d || true
+          sudo docker compose -f docker-compose.yml down --rmi all
+          sudo docker compose -f docker-compose.yml up -d
+
