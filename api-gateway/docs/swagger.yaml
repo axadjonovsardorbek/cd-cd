@@ -1,0 +1,896 @@
+definitions:
+  genprotos.CompanyCreateReq:
+    properties:
+      address:
+        type: string
+      industry:
+        type: string
+      name:
+        type: string
+      website:
+        type: string
+    type: object
+  genprotos.CompanyGetAllRes:
+    properties:
+      companies:
+        items:
+          $ref: '#/definitions/genprotos.CompanyRes'
+        type: array
+    type: object
+  genprotos.CompanyGetByIdRes:
+    properties:
+      company:
+        $ref: '#/definitions/genprotos.CompanyRes'
+    type: object
+  genprotos.CompanyRes:
+    properties:
+      address:
+        type: string
+      id:
+        type: string
+      industry:
+        type: string
+      name:
+        type: string
+      website:
+        type: string
+    type: object
+  genprotos.DepartmentCreateReq:
+    properties:
+      company_id:
+        type: string
+      name:
+        type: string
+    type: object
+  genprotos.DepartmentGetAllRes:
+    properties:
+      departments:
+        items:
+          $ref: '#/definitions/genprotos.DepartmentRes'
+        type: array
+    type: object
+  genprotos.DepartmentGetByIdRes:
+    properties:
+      department:
+        $ref: '#/definitions/genprotos.DepartmentRes'
+    type: object
+  genprotos.DepartmentRes:
+    properties:
+      company_id:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+  genprotos.PositionCreateReq:
+    properties:
+      department_id:
+        type: string
+      description:
+        type: string
+      title:
+        type: string
+    type: object
+  genprotos.PositionGetAllRes:
+    properties:
+      positions:
+        items:
+          $ref: '#/definitions/genprotos.PositionRes'
+        type: array
+    type: object
+  genprotos.PositionGetByIdRes:
+    properties:
+      position:
+        $ref: '#/definitions/genprotos.PositionRes'
+    type: object
+  genprotos.PositionRes:
+    properties:
+      department_id:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      title:
+        type: string
+    type: object
+  genprotos.ResumeCreateReq:
+    properties:
+      education:
+        type: string
+      summary:
+        type: string
+      user_id:
+        type: string
+    type: object
+  genprotos.ResumeGetAllRes:
+    properties:
+      resumes:
+        items:
+          $ref: '#/definitions/genprotos.ResumeRes'
+        type: array
+    type: object
+  genprotos.ResumeGetByIdRes:
+    properties:
+      resume:
+        $ref: '#/definitions/genprotos.ResumeRes'
+    type: object
+  genprotos.ResumeRes:
+    properties:
+      education:
+        type: string
+      id:
+        type: string
+      summary:
+        type: string
+      user_id:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /company:
+    post:
+      consumes:
+      - application/json
+      description: Create a new company
+      parameters:
+      - description: Company data
+        in: body
+        name: company
+        required: true
+        schema:
+          $ref: '#/definitions/genprotos.CompanyCreateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/genprotos.CompanyRes'
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create company
+      tags:
+      - company
+  /company/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a company by ID
+      parameters:
+      - description: Company ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Company deleted
+          schema:
+            type: string
+        "400":
+          description: Invalid company ID
+          schema:
+            type: string
+        "404":
+          description: Company not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete company
+      tags:
+      - company
+    get:
+      consumes:
+      - application/json
+      description: Get a company
+      parameters:
+      - description: Company ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/genprotos.CompanyGetByIdRes'
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get company
+      tags:
+      - company
+    put:
+      consumes:
+      - application/json
+      description: Update an existing company
+      parameters:
+      - description: Company ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updated company data
+        in: body
+        name: company
+        required: true
+        schema:
+          $ref: '#/definitions/genprotos.CompanyCreateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/genprotos.CompanyRes'
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "404":
+          description: Company not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update company
+      tags:
+      - company
+  /company/all:
+    get:
+      consumes:
+      - application/json
+      description: Get all companies
+      parameters:
+      - description: Name
+        in: query
+        name: name
+        type: string
+      - description: Address
+        in: query
+        name: address
+        type: string
+      - description: Industry
+        in: query
+        name: industry
+        type: string
+      - description: website
+        in: query
+        name: website
+        type: string
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/genprotos.CompanyGetAllRes'
+        "400":
+          description: Invalid parameters
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get all companies
+      tags:
+      - company
+  /department:
+    post:
+      consumes:
+      - application/json
+      description: Create a new department
+      parameters:
+      - description: Department data
+        in: body
+        name: department
+        required: true
+        schema:
+          $ref: '#/definitions/genprotos.DepartmentCreateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/genprotos.DepartmentRes'
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create department
+      tags:
+      - department
+  /department/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a department by ID
+      parameters:
+      - description: Department ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Department deleted
+          schema:
+            type: string
+        "400":
+          description: Invalid department ID
+          schema:
+            type: string
+        "404":
+          description: Department not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete department
+      tags:
+      - department
+    get:
+      consumes:
+      - application/json
+      description: Get a department
+      parameters:
+      - description: Department ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/genprotos.DepartmentGetByIdRes'
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get department
+      tags:
+      - department
+    put:
+      consumes:
+      - application/json
+      description: Update an existing department
+      parameters:
+      - description: Department ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updated department data
+        in: body
+        name: department
+        required: true
+        schema:
+          $ref: '#/definitions/genprotos.DepartmentCreateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/genprotos.DepartmentRes'
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "404":
+          description: Department not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update department
+      tags:
+      - department
+  /department/{id}/position:
+    get:
+      consumes:
+      - application/json
+      description: Get position by department
+      parameters:
+      - description: DepartmentId
+        in: query
+        name: department_id
+        type: string
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/genprotos.PositionGetAllRes'
+        "400":
+          description: Invalid parameters
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get position by department
+      tags:
+      - department
+  /department/all:
+    get:
+      consumes:
+      - application/json
+      description: Get all departments
+      parameters:
+      - description: Name
+        in: query
+        name: name
+        type: string
+      - description: CompanyId
+        in: query
+        name: company_id
+        type: string
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/genprotos.DepartmentGetAllRes'
+        "400":
+          description: Invalid parameters
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get all departments
+      tags:
+      - department
+  /position:
+    post:
+      consumes:
+      - application/json
+      description: Create a new position
+      parameters:
+      - description: Position data
+        in: body
+        name: position
+        required: true
+        schema:
+          $ref: '#/definitions/genprotos.PositionCreateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/genprotos.PositionRes'
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create position
+      tags:
+      - position
+  /position/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a position by ID
+      parameters:
+      - description: Position ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Position deleted
+          schema:
+            type: string
+        "400":
+          description: Invalid position ID
+          schema:
+            type: string
+        "404":
+          description: Position not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete position
+      tags:
+      - position
+    get:
+      consumes:
+      - application/json
+      description: Get a position
+      parameters:
+      - description: Position ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/genprotos.PositionGetByIdRes'
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get position
+      tags:
+      - position
+    put:
+      consumes:
+      - application/json
+      description: Update an existing position
+      parameters:
+      - description: Position ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updated position data
+        in: body
+        name: position
+        required: true
+        schema:
+          $ref: '#/definitions/genprotos.PositionCreateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/genprotos.PositionRes'
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "404":
+          description: Position not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update position
+      tags:
+      - position
+  /position/all:
+    get:
+      consumes:
+      - application/json
+      description: Get all positions
+      parameters:
+      - description: DepartmentId
+        in: query
+        name: department_id
+        type: string
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/genprotos.PositionGetAllRes'
+        "400":
+          description: Invalid parameters
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get all positions
+      tags:
+      - position
+  /resume:
+    post:
+      consumes:
+      - application/json
+      description: Create a new resume
+      parameters:
+      - description: Resume data
+        in: body
+        name: resume
+        required: true
+        schema:
+          $ref: '#/definitions/genprotos.ResumeCreateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/genprotos.ResumeRes'
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create resume
+      tags:
+      - resume
+  /resume/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a resume by ID
+      parameters:
+      - description: Resume ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Resume deleted
+          schema:
+            type: string
+        "400":
+          description: Invalid resume ID
+          schema:
+            type: string
+        "404":
+          description: Resume not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete resume
+      tags:
+      - resume
+    get:
+      consumes:
+      - application/json
+      description: Get a resume
+      parameters:
+      - description: Resume ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/genprotos.ResumeGetByIdRes'
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get resume
+      tags:
+      - resume
+    put:
+      consumes:
+      - application/json
+      description: Update an existing resume
+      parameters:
+      - description: Resume ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updated resume data
+        in: body
+        name: position
+        required: true
+        schema:
+          $ref: '#/definitions/genprotos.ResumeCreateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/genprotos.ResumeRes'
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "404":
+          description: Resume not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update resume
+      tags:
+      - resume
+  /resume/all:
+    get:
+      consumes:
+      - application/json
+      description: Get all resumes
+      parameters:
+      - description: UserId
+        in: query
+        name: user_id
+        type: string
+      - description: Education
+        in: query
+        name: education
+        type: string
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/genprotos.ResumeGetAllRes'
+        "400":
+          description: Invalid parameters
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get all resumes
+      tags:
+      - resume
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

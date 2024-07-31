@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  migrate:
+    image: migrate/migrate
+    networks: 
+      - staffer
+    volumes:
+      - ./company-service/migrations:/migrations
+    command: [ "-path", "/migrations", "-database", "postgres://postgres:1111@postgres:5432/staffer?sslmode=disable", "up" ]
+    depends_on:
+      - postgres-db
+
+  postgres-db:
+    container_name: postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1111
+      PGDATA: /data/postgres
+      POSTGRES_DB: staffer
+    volumes:
+      - db:/databasedatadb/postgres
+    ports:
+      - "5332:5332"
+    networks:
+      - staffer
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+  
+  company-service:
+    container_name: company-service
+    build: ./company-service
+    depends_on:
+      - postgres-db
+    ports:
+      - "50051:50051"
+    networks:
+      - staffer
+
+  api-gateway:
+    container_name: api-gateway
+    build: ./api-gateway
+    depends_on:
+      - postgres-db
+      - company-service
+    ports:
+      - "8081:8081"
+    networks:
+      - staffer
+    
+networks:
+  staffer:
+    driver: bridge
+
+volumes:
+  db:    
